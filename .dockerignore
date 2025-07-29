@@ -1,0 +1,28 @@
+# Ignorar a pasta de módulos Node
+node_modules/
+
+# Ignorar os artefatos de build do Next.js (já gerados na etapa de build do Dockerfile)
+.next/
+out/
+build/
+
+# Ignorar arquivos de ambiente local
+.env
+.env.local
+
+# Ignorar logs e arquivos de cache
+npm-debug.log
+yarn-error.log
+.npm/
+.yarn/
+*.log
+*.gz
+
+# Ignorar arquivos do Git (se não estiverem já no .gitignore)
+.git
+.gitignore
+
+# Ignorar arquivos de editor/SO
+.vscode/
+.idea/
+.DS_Store

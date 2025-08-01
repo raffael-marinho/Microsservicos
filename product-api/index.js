@@ -1,5 +1,6 @@
 const express = require('express');
 const fetch = require('node-fetch'); // <-- Adicionado: Importa a biblioteca para fazer requisições HTTP
+const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3001;
 // IMPORTANTE: Quando rodamos com Docker Compose, os serviços se comunicam pelo nome do serviço
@@ -7,6 +8,11 @@ const PORT = process.env.PORT || 3001;
 const INVENTORY_SERVICE_URL = process.env.INVENTORY_SERVICE_URL || 'http://localhost:3003'; // <-- Adicionado: URL do serviço de estoque
 
 app.use(express.json());
+
+app.use(cors({ // <-- ADICIONADO: Usa o middleware cors
+    origin: 'http://localhost:3000', // Permite apenas requisições do seu frontend
+    credentials: true, // Permite o envio de cookies/cabeçalhos de autorização
+}));
 
 const products = [
     { id: 'prod001', name: 'Wireless Headphones', price: 129.99, category: 'Electronics' },

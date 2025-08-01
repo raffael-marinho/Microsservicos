@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import ProductsScreen from "@/components/products-screen"
 import ProductDetailScreen from "@/components/product-detail-screen"
 import PaymentScreen from "@/components/payment-screen"
@@ -17,75 +17,35 @@ export type Product = {
   reviews: number
 }
 
-const mockProducts: Product[] = [
-  {
-    id: "1",
-    name: "Wireless Headphones",
-    price: 129.99,
-    image: "/placeholder.svg?height=300&width=300",
-    description:
-      "Premium wireless headphones with noise cancellation and 30-hour battery life. Perfect for music lovers and professionals.",
-    category: "Electronics",
-    rating: 4.5,
-    reviews: 234,
-  },
-  {
-    id: "2",
-    name: "Smart Watch",
-    price: 299.99,
-    image: "/placeholder.svg?height=300&width=300",
-    description: "Advanced fitness tracking, heart rate monitoring, and smartphone connectivity in a sleek design.",
-    category: "Electronics",
-    rating: 4.3,
-    reviews: 189,
-  },
-  {
-    id: "3",
-    name: "Laptop Backpack",
-    price: 79.99,
-    image: "/placeholder.svg?height=300&width=300",
-    description: "Durable and stylish backpack with padded laptop compartment and multiple organizational pockets.",
-    category: "Accessories",
-    rating: 4.7,
-    reviews: 156,
-  },
-  {
-    id: "4",
-    name: "Coffee Maker",
-    price: 199.99,
-    image: "/placeholder.svg?height=300&width=300",
-    description: "Programmable coffee maker with built-in grinder and thermal carafe. Makes perfect coffee every time.",
-    category: "Home",
-    rating: 4.4,
-    reviews: 298,
-  },
-  {
-    id: "5",
-    name: "Yoga Mat",
-    price: 49.99,
-    image: "/placeholder.svg?height=300&width=300",
-    description: "Non-slip premium yoga mat with extra cushioning for comfort during your practice sessions.",
-    category: "Fitness",
-    rating: 4.6,
-    reviews: 412,
-  },
-  {
-    id: "6",
-    name: "Desk Lamp",
-    price: 89.99,
-    image: "/placeholder.svg?height=300&width=300",
-    description: "LED desk lamp with adjustable brightness and color temperature. Perfect for work and study.",
-    category: "Home",
-    rating: 4.2,
-    reviews: 87,
-  },
-]
-
 export default function EcommerceApp() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
   const [currentScreen, setCurrentScreen] = useState<"products" | "detail" | "payment" | "cart">("products")
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [cartItems, setCartItems] = useState<Array<{ product: Product; quantity: number }>>([])
   const [selectedCartItems, setSelectedCartItems] = useState<string[]>([])
+
+  // Buscar produtos da API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/products")
+        if (!response.ok) {
+          throw new Error(`Erro: ${response.status}`)
+        }
+        const data = await response.json()
+        setProducts(data)
+      } catch (err: any) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProducts()
+  }, [])
 
   const handleProductSelect = (product: Product) => {
     setSelectedProduct(product)
@@ -146,11 +106,15 @@ export default function EcommerceApp() {
     setCurrentScreen("payment")
   }
 
+  // Loading ou erro na tela de produtos
+  if (loading) return <div>Carregando produtos...</div>
+  if (error) return <div>Erro ao carregar produtos: {error}</div>
+
   return (
     <div className="min-h-screen bg-gray-50">
       {currentScreen === "products" && (
         <ProductsScreen
-          products={mockProducts}
+          products={products}
           onProductSelect={handleProductSelect}
           onGoToCart={handleGoToCart}
           cartItemsCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}

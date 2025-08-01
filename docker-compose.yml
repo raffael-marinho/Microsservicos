@@ -1,0 +1,41 @@
+version: '3.8' # Versão da sintaxe do Docker Compose
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - product-api
+      - user-api
+    environment:
+      NEXT_PUBLIC_PRODUCT_API_URL: http://localhost:3001 # <-- AGORA APONTA PARA O HOST
+      NEXT_PUBLIC_USER_API_URL: http://localhost:3002 # <-- ADICIONE E APONTE PARA O HOST
+
+  product-api:
+    build:
+      context: ./product-api # Onde encontrar o Dockerfile do product-api
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001" # Mapeia a porta 3001 do host para a porta 3001 do container
+    depends_on:
+      - inventory-service # product-api depende de inventory-service para iniciar
+    environment:
+      # Variável de ambiente para o product-api acessar o inventory-service
+      INVENTORY_SERVICE_URL: http://inventory-service:3003
+
+  user-api:
+    build:
+      context: ./user-api # Onde encontrar o Dockerfile do user-api
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002" # Mapeia a porta 3002 do host para a porta 3002 do container
+
+  inventory-service:
+    build:
+      context: ./inventory-service # Onde encontrar o Dockerfile do inventory-service
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3003" # Mapeia a porta 3003 do host para a porta 3003 do container

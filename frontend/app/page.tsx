@@ -31,7 +31,7 @@ export default function EcommerceApp() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:3001/products")
+        const response = await fetch("/api/products")
         if (!response.ok) {
           throw new Error(`Erro: ${response.status}`)
         }

@@ -15,10 +15,10 @@ app.use(cors({ // <-- ADICIONADO: Usa o middleware cors
 }));
 
 const products = [
-    { id: 'prod001', name: 'Wireless Headphones', price: 129.99, category: 'Electronics' },
-    { id: 'prod002', name: 'Smart Watch', price: 299.99, category: 'Electronics' },
-    { id: 'prod003', name: 'Laptop Backpack', price: 79.99, category: 'Accessories' },
-    { id: 'prod004', name: 'Gaming Mouse', price: 49.99, category: 'Electronics' },
+    { id: 'prod001', name: 'Wireless Headphones', price: 129.99, category: 'Electronics', image: 'http://localhost:8080/images/headphone.jpeg' },
+    { id: 'prod002', name: 'Smart Watch', price: 299.99, category: 'Electronics', image: 'http://localhost:8080/images/smartwatch.jpeg' },
+    { id: 'prod003', name: 'Laptop Backpack', price: 79.99, category: 'Accessories', image: 'http://localhost:8080/images/backpack.jpeg' },
+    { id: 'prod004', name: 'Gaming Mouse', price: 49.99, category: 'Electronics', image: 'http://localhost:8080/images/mouse.jpeg' },
 ];
 
 // Endpoint GET para listar todos os produtos com estoque
